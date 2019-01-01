@@ -75,7 +75,7 @@ void spliteNum(float num)
 	float temp2,temp3;//整数.小数
 	if (num > 10000)
 	{
-		//state = 7;//8error
+		state = 8;//8error
 		return;
 	}
 	temp2 = num>=0 ? num : -num;
@@ -84,8 +84,10 @@ void spliteNum(float num)
 	temp1 = (long int)(temp3*10000);
 
 	point = 0;
-	while(temp1>0)
+	count = 4;
+	while(count>0)
 	{
+		count--;
 		QUEUE[point++] = temp1%10;
         temp1 /= 10; 
 	}
