@@ -36,7 +36,12 @@
                     		0x45,0x52,0x4f,0x43};//这三个会显示E R O C
 
 		uchar QUEUE[16]={' '};//定义一个队列
-		uchar inPutNum;		
+
+		float a=0, b=0, c=0, num=0;//运算数
+		uint point=0;//显示字符数组指针/小数位数/数字符号(+:1 -:-1)
+		char state=0, statex=0, flag=0,count=0, sign=1;//状态/子状态/运算符(+or- || *or/)
+		//char QUEUE[16]={0};//显示字符数组
+
 		void scanf(uchar *var);//从矩阵键盘中获取值
 		void print(uchar *outStr,uint end);//打印字符串
 		void delay5MS();//短延时函数
@@ -45,21 +50,76 @@
 		void showOneChar(uchar dat);//写数据子程序
 		void init();//初始化子程序，初始化液晶显示屏
 		void clear();//清除显示屏上的显示
-		
+		void spliteNum(float num);
 		
 	void main()
 	{
 		uchar i=1;
-		uchar num=0xff;
+		float a= -6789;
 		init();
-		while(1){	   	  
-		scanf(&num);
-		QUEUE[i-1] = num;
-		clear();
-		print(QUEUE , i);
-		++i;
+
+		spliteNum(a);
+		
+		print(QUEUE , point);
+		  while(1);
+		
+	}
+
+/**splite float*****************
+*待验证与补完
+*限制运算数,运算结果不超过10000,小数部分精度为4
+*/
+void spliteNum(float num)
+{
+	long int temp0,temp1;//整数.小数
+	float temp2,temp3;//整数.小数
+	if (num > 10000)
+	{
+		//state = 7;//8error
+		return;
+	}
+	temp2 = num>=0 ? num : -num;
+	temp0 = (long int)temp2;
+	temp3 = temp2 - temp0;
+	temp1 = (long int)(temp3*10000);
+
+	point = 0;
+	while(temp1>0)
+	{
+		QUEUE[point++] = temp1%10;
+        temp1 /= 10; 
+	}
+	if (point > 0)
+	{
+		QUEUE[point++] = '.';
+	}
+	if(temp0 == 0)
+    {
+        QUEUE[point++] = 0;
+    }
+    else
+		while(temp0>0)
+		{
+			QUEUE[point++] = temp0%10;
+	        temp0 /= 10; 
 		}
-	}	
+
+	
+	if(num < 0)
+    {
+        QUEUE[point++] = '-';
+    }
+
+    for(temp0 = point-1; temp0 >= point/2; --temp0)
+    {
+        temp1 = QUEUE[temp0];
+        QUEUE[temp0] = QUEUE[point-1-temp0];
+        QUEUE[point-1-temp0] = temp1;
+    }
+
+	return;
+}
+
 	/**********从键盘获取值得函数类似于C语言的scanf()函数**************/				
 		void scanf(uchar *var)
 		{
