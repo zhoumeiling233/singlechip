@@ -5,3 +5,8 @@ demo1 v0.1 实现输入第一个数字
 demo1.c v0.2 实现输入四则运算算式  
 demo v0.1 屏幕显示浮点数  
 calculator.c 完成品
+
+## 状态图
+结合代码中注释使用  
+![alt text](/state-map.png "状态图")  
+![alt text](/sub-state-map.png "子状态图")  
